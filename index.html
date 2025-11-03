@@ -10,33 +10,31 @@
 <body>
   <main>
     <form id="expenseForm">
-      <h2>💸 Add Expense</h2>
-
+      <h2>💰 Add Expense</h2>
       <label>Date</label>
-      <input id="date" name="entry.442057249" type="date" required />
+      <input name="entry.442057249" id="date" type="date" required>
 
       <label>Amount (₹)</label>
-      <div class="currency">
-        <span>₹</span>
-        <input id="amount" name="entry.1545306348" type="number" min="0" step="0.01" required />
-      </div>
+      <input name="entry.1545306348" id="amount" type="number" min="0" step="0.01" required>
 
       <label>Description</label>
-      <textarea id="desc" name="entry.445234516" rows="3" required></textarea>
+      <textarea name="entry.445234516" id="desc" rows="3" required></textarea>
 
       <button type="submit">Submit</button>
-      <button type="button" id="syncBtn">Sync Now</button>
     </form>
 
-    <section class="view-section">
+    <section id="viewExpenses">
       <h2>📊 View Expenses</h2>
-
-      <label>Select Month</label>
-      <select id="monthSelect"></select>
-
-      <button id="loadDataBtn">Load Data</button>
-
-      <p id="totalDisplay" class="total"></p>
+      <div class="controls">
+        <label>Month</label>
+        <select id="monthSelect"></select>
+        <label>Year</label>
+        <select id="yearSelect"></select>
+        <button id="loadDataBtn">Load Data</button>
+      </div>
+      <div id="summary">
+        <p id="totalDisplay">Total: ₹0</p>
+      </div>
       <div id="expenseData"></div>
     </section>
   </main>
