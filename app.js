@@ -71,7 +71,6 @@ async function loadExpenses(month) {
   totalDisplay.textContent = "";
 
   try {
-    const monthSelector = document.getElementById("monthSelect");
     const res = await fetch(`${API_URL}?action=getData&month=${encodeURIComponent(month)}`);
     const result = await res.json();
     console.log("📦 Expense data:", result);
@@ -101,6 +100,7 @@ async function loadExpenses(month) {
   }
 }
 
+const monthSelector = document.getElementById("monthSelect");
 monthSelector.addEventListener("change", (e) => loadExpenses(e.target.value));
 
 window.addEventListener("DOMContentLoaded", loadMonths);
@@ -112,6 +112,7 @@ if ("serviceWorker" in navigator) {
     .then(() => console.log("✅ Service Worker registered successfully"))
     .catch(console.error);
 }
+
 
 
 
