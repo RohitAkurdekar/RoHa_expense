@@ -49,7 +49,7 @@ async function loadMonths() {
 
     if (!data.months || !Array.isArray(data.months)) throw new Error("Invalid months response");
 
-    monthSelector.innerHTML = "";
+    // monthSelector.innerHTML = "";
     data.months.forEach((m) => {
       const opt = document.createElement("option");
       opt.value = m;
@@ -110,4 +110,5 @@ if ("serviceWorker" in navigator) {
     .then(() => console.log("✅ Service Worker registered successfully"))
     .catch(console.error);
 }
+
 
