@@ -5,7 +5,7 @@ const ENTRY_ID_DATE = "entry.442057249";
 const ENTRY_ID_AMOUNT = "entry.1545306348";
 const ENTRY_ID_MESSAGE = "entry.445234516";
 
-// === DOM ===
+// === DOM ELEMENTS ===
 const form = document.getElementById("expenseForm");
 const statusText = document.getElementById("formStatus");
 const tableBody = document.querySelector("#expenseTable tbody");
@@ -28,7 +28,7 @@ form.addEventListener("submit", async (e) => {
     formData.append(ENTRY_ID_AMOUNT, amount);
     formData.append(ENTRY_ID_MESSAGE, message);
 
-    const response = await fetch(FORM_URL, {
+    await fetch(FORM_URL, {
       method: "POST",
       mode: "no-cors",
       body: formData,
@@ -59,44 +59,47 @@ async function loadMonths() {
       throw new Error("Invalid months response");
     }
 
-    const monthSelect = document.getElementById("monthSelect");
-    monthSelect.innerHTML = "";
+    monthSelector.innerHTML = "";
 
     data.months.forEach(m => {
       const opt = document.createElement("option");
       opt.value = m;
       opt.textContent = m;
-      monthSelect.appendChild(opt);
+      monthSelector.appendChild(opt);
     });
 
     console.log(`✅ Loaded ${data.months.length} months`);
+
+    if (data.months.length > 0) {
+      loadExpenses(data.months[data.months.length - 1]); // Load latest month automatically
+    }
   } catch (err) {
     console.error("❌ Failed to load months:", err);
   }
 }
 
-// === LOAD EXPENSES FOR MONTH ===
+// === LOAD EXPENSES FOR SELECTED MONTH ===
 async function loadExpenses(month) {
   tableBody.innerHTML = "<tr><td colspan='3'>Loading...</td></tr>";
   totalDisplay.textContent = "";
 
   try {
     const res = await fetch(`${API_URL}?action=getData&month=${month}`);
-    const data = await res.json();
+    const json = await res.json();
 
-    if (!data || !Array.isArray(data)) {
+    if (!json.data || !Array.isArray(json.data)) {
       tableBody.innerHTML = "<tr><td colspan='3'>No data found</td></tr>";
       return;
     }
 
     let total = 0;
-    tableBody.innerHTML = data
+    tableBody.innerHTML = json.data
       .map((row) => {
         total += parseFloat(row.amount) || 0;
         return `<tr>
-          <td>${row.date}</td>
+          <td>${new Date(row.date).toLocaleDateString()}</td>
           <td>₹${row.amount}</td>
-          <td>${row.message}</td>
+          <td>${row.description}</td>
         </tr>`;
       })
       .join("");
@@ -108,7 +111,7 @@ async function loadExpenses(month) {
   }
 }
 
-// === EVENT ===
+// === EVENT LISTENER ===
 monthSelector.addEventListener("change", (e) => {
   loadExpenses(e.target.value);
 });
@@ -118,9 +121,8 @@ loadMonths();
 
 // === SERVICE WORKER (optional offline support) ===
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js")
+  navigator.serviceWorker
+    .register("service-worker.js")
     .then(() => console.log("✅ Service Worker registered successfully"))
     .catch(console.error);
 }
-
-
