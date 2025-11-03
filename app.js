@@ -10,6 +10,7 @@ const form = document.getElementById("expenseForm");
 const statusText = document.getElementById("formStatus");
 const tableBody = document.querySelector("#expenseTable tbody");
 const totalDisplay = document.getElementById("total");
+const monthSelector = document.getElementById("monthSelect");
 
 // === ADD EXPENSE ===
 form.addEventListener("submit", async (e) => {
@@ -42,14 +43,13 @@ form.addEventListener("submit", async (e) => {
 async function loadMonths() {
   console.log("📡 Fetching available months...");
   try {
-    const monthSelector = document.getElementById("monthSelect");
-
     const res = await fetch(`${API_URL}?action=getMonths`);
     const data = await res.json();
     console.log("📦 Months API response:", data);
 
     if (!data.months || !Array.isArray(data.months)) throw new Error("Invalid months response");
 
+    // Clear dropdown before appending new options
     monthSelector.innerHTML = "";
     data.months.forEach((m) => {
       const opt = document.createElement("option");
@@ -58,7 +58,9 @@ async function loadMonths() {
       monthSelector.appendChild(opt);
     });
 
-    if (data.months.length > 0) loadExpenses(data.months[0]);
+    if (data.months.length > 0) {
+      loadExpenses(data.months[0]); // Auto-load first month
+    }
   } catch (err) {
     console.error("❌ Failed to load months:", err);
   }
@@ -100,7 +102,6 @@ async function loadExpenses(month) {
   }
 }
 
-const monthSelector = document.getElementById("monthSelect");
 monthSelector.addEventListener("change", (e) => loadExpenses(e.target.value));
 
 window.addEventListener("DOMContentLoaded", loadMonths);
@@ -112,7 +113,3 @@ if ("serviceWorker" in navigator) {
     .then(() => console.log("✅ Service Worker registered successfully"))
     .catch(console.error);
 }
-
-
-
-
