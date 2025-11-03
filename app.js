@@ -49,20 +49,29 @@ form.addEventListener("submit", async (e) => {
 
 // === LOAD MONTHS ===
 async function loadMonths() {
-  monthSelector.innerHTML = "<option>Loading...</option>";
-
+  console.log("📡 Fetching available months...");
   try {
     const res = await fetch(`${API_URL}?action=getMonths`);
     const data = await res.json();
+    console.log("📦 Months API response:", data);
 
-    monthSelector.innerHTML = data
-      .map((m) => `<option value="${m}">${m}</option>`)
-      .join("");
+    if (!data.months || !Array.isArray(data.months)) {
+      throw new Error("Invalid months response");
+    }
 
-    loadExpenses(data[0]);
+    const monthSelect = document.getElementById("monthSelect");
+    monthSelect.innerHTML = "";
+
+    data.months.forEach(m => {
+      const opt = document.createElement("option");
+      opt.value = m;
+      opt.textContent = m;
+      monthSelect.appendChild(opt);
+    });
+
+    console.log(`✅ Loaded ${data.months.length} months`);
   } catch (err) {
     console.error("❌ Failed to load months:", err);
-    monthSelector.innerHTML = "<option>Error loading months</option>";
   }
 }
 
@@ -113,4 +122,5 @@ if ("serviceWorker" in navigator) {
     .then(() => console.log("✅ Service Worker registered successfully"))
     .catch(console.error);
 }
+
 
