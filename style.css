@@ -1,47 +1,52 @@
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f6f8fa;
-  color: #222;
+  font-family: Arial, sans-serif;
+  background: #f5f6fa;
+  color: #2f3640;
+  text-align: center;
   margin: 0;
   padding: 20px;
 }
 
 h1 {
-  text-align: center;
-  color: #0a84ff;
+  color: #273c75;
+  margin-bottom: 20px;
 }
 
 section {
   background: white;
-  padding: 20px;
   border-radius: 12px;
-  margin: 20px auto;
-  max-width: 600px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 15px auto;
+  max-width: 500px;
 }
 
 input, select, button {
+  width: 90%;
+  margin: 8px 0;
   padding: 10px;
-  font-size: 1rem;
   border-radius: 6px;
   border: 1px solid #ccc;
+  font-size: 1rem;
 }
 
 button {
-  background-color: #0a84ff;
+  background: #44bd32;
   color: white;
-  cursor: pointer;
   border: none;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 button:hover {
-  background-color: #006edc;
+  background: #4cd137;
+}
+
+#total {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 10px 0;
+  color: #0097e6;
 }
 
 table {
@@ -50,18 +55,16 @@ table {
   margin-top: 10px;
 }
 
-table, th, td {
-  border: 1px solid #ccc;
-}
-
 th, td {
   padding: 8px;
-  text-align: center;
+  border-bottom: 1px solid #dcdde1;
 }
 
-.total {
-  font-weight: bold;
-  color: #0a84ff;
-  margin-top: 10px;
-  text-align: right;
+th {
+  background: #273c75;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background: #f1f2f6;
 }
