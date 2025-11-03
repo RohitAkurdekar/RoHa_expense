@@ -1,135 +1,112 @@
-// === CONFIG ===
-const API_URL = "https://script.google.com/macros/s/AKfycbwoAX6tK9-eU3r2ZyL5sxgD5UbsTEs7o9eX1DrGXbRC8ZShCTWa4ipHM37UeiDOkXdy9A/exec";
 const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfe5jqsBh3dUHOZ3qFTkzzR3kOl3wo8WaMQcDo4M_Uw5V2krA/formResponse";
-const ENTRY_ID_DATE = "entry.442057249";
-const ENTRY_ID_AMOUNT = "entry.1545306348";
-const ENTRY_ID_MESSAGE = "entry.445234516";
+const ENTRY_ID_DATE = 'entry.442057249';
+const ENTRY_ID_AMOUNT = 'entry.1545306348';
+const ENTRY_ID_MESSAGE = 'entry.445234516';
 
-// === ELEMENTS ===
-const form = document.getElementById("expenseForm");
-const monthSelect = document.getElementById("monthSelect");
-const loadDataBtn = document.getElementById("loadDataBtn");
-const expenseDataDiv = document.getElementById("expenseData");
-const totalDisplay = document.getElementById("totalDisplay");
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwoAX6tK9-eU3r2ZyL5sxgD5UbsTEs7o9eX1DrGXbRC8ZShCTWa4ipHM37UeiDOkXdy9A/exec";
 
-// === SERVICE WORKER ===
+console.log("🚀 Initializing Expense Tracker...");
+
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("service-worker.js")
     .then(() => console.log("✅ Service Worker registered successfully"))
-    .catch(err => console.error("❌ SW registration failed:", err));
+    .catch(err => console.error("❌ Service Worker registration failed:", err));
 }
 
-// === ADD EXPENSE ===
-form.addEventListener("submit", e => {
-  e.preventDefault();
-  const data = {
-    date: form.date.value,
-    amount: form.amount.value,
-    desc: form.desc.value
-  };
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("expenseForm");
+  const monthSelect = document.getElementById("monthSelect");
+  const yearSelect = document.getElementById("yearSelect");
+  const expenseData = document.getElementById("expenseData");
+  const totalDisplay = document.getElementById("totalDisplay");
+  const loadBtn = document.getElementById("loadDataBtn");
 
-  if (parseFloat(data.amount) < 0) {
-    alert("Amount cannot be negative.");
-    return;
-  }
+  async function loadMonths() {
+    console.log("📡 Fetching available months...");
+    try {
+      const res = await fetch(`${SCRIPT_URL}?action=getMonths`);
+      const data = await res.json();
+      console.log("📦 Received months:", data);
 
-  console.log("📝 Submitting Expense:", data);
+      monthSelect.innerHTML = "";
+      yearSelect.innerHTML = "";
 
-  if (navigator.onLine) {
-    submitToGoogle(data);
-  } else {
-    saveOffline(data);
-    alert("Saved offline. Will sync when online.");
-  }
+      if (data.months && data.months.length > 0) {
+        const years = new Set();
+        data.months.forEach(m => {
+          const [month, year] = m.split("-");
+          years.add(year);
 
-  form.reset();
-});
+          const opt = document.createElement("option");
+          opt.value = month;
+          opt.textContent = month;
+          monthSelect.appendChild(opt);
+        });
 
-function submitToGoogle(data) {
-  console.log("📤 Sending to Google Form...");
-  const fd = new FormData();
-  fd.append(ENTRY_ID_DATE, data.date);
-  fd.append(ENTRY_ID_AMOUNT, data.amount);
-  fd.append(ENTRY_ID_MESSAGE, data.desc);
-
-  fetch(FORM_URL, { method: "POST", mode: "no-cors", body: fd })
-    .then(() => console.log("✅ Submitted successfully!"))
-    .catch(err => console.error("❌ Submit failed:", err));
-}
-
-function saveOffline(data) {
-  let entries = JSON.parse(localStorage.getItem("offlineEntries") || "[]");
-  entries.push(data);
-  localStorage.setItem("offlineEntries", JSON.stringify(entries));
-}
-
-document.getElementById("syncBtn").addEventListener("click", syncOfflineEntries);
-window.addEventListener("online", syncOfflineEntries);
-
-function syncOfflineEntries() {
-  const entries = JSON.parse(localStorage.getItem("offlineEntries") || "[]");
-  entries.forEach(submitToGoogle);
-  if (entries.length > 0) {
-    alert("Offline entries synced!");
-    localStorage.removeItem("offlineEntries");
-  }
-}
-
-// === FETCH EXPENSES ===
-async function loadMonths() {
-  console.log("📡 Fetching available months...");
-  try {
-    const res = await fetch(`${API_URL}?action=getMonths`);
-    const json = await res.json();
-    monthSelect.innerHTML = "";
-    json.months.forEach(m => {
-      const opt = document.createElement("option");
-      opt.value = m;
-      opt.textContent = m;
-      monthSelect.appendChild(opt);
-    });
-  } catch (err) {
-    console.error("❌ Failed to load months:", err);
-  }
-}
-
-loadDataBtn.addEventListener("click", async () => {
-  const month = monthSelect.value;
-  console.log("📅 Loading data for:", month);
-  expenseDataDiv.innerHTML = "Loading...";
-  totalDisplay.textContent = "";
-
-  try {
-    const res = await fetch(`${API_URL}?action=getData&month=${month}`);
-    const json = await res.json();
-
-    if (json.error) {
-      expenseDataDiv.innerHTML = `<p>${json.error}</p>`;
-      return;
+        years.forEach(y => {
+          const opt = document.createElement("option");
+          opt.value = y;
+          opt.textContent = y;
+          yearSelect.appendChild(opt);
+        });
+      }
+    } catch (err) {
+      console.error("❌ Failed to load months:", err);
     }
-
-    renderTable(json.data, json.total);
-  } catch (err) {
-    console.error("❌ Fetch failed:", err);
   }
+
+  async function submitExpense(e) {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const payload = new URLSearchParams();
+    payload.append(ENTRY_ID_DATE, formData.get("entry.442057249"));
+    payload.append(ENTRY_ID_AMOUNT, formData.get("entry.1545306348"));
+    payload.append(ENTRY_ID_MESSAGE, formData.get("entry.445234516"));
+
+    console.log("📝 Submitting Expense:", Object.fromEntries(formData));
+
+    try {
+      await fetch(FORM_URL, { method: "POST", body: payload });
+      alert("✅ Expense added successfully!");
+      form.reset();
+      await loadMonths();
+    } catch (err) {
+      console.error("❌ Expense submission failed:", err);
+      alert("Submission failed! Please try again.");
+    }
+  }
+
+  async function loadExpenses() {
+    const month = monthSelect.value;
+    const year = yearSelect.value;
+    console.log(`📅 Fetching data for: ${month}-${year}`);
+
+    try {
+      const res = await fetch(`${SCRIPT_URL}?action=getData&month=${month}&year=${year}`);
+      const data = await res.json();
+      console.log("📦 Received expense data:", data);
+
+      if (data.expenses && data.expenses.length > 0) {
+        let total = 0;
+        let html = `<table><tr><th>Date</th><th>Amount (₹)</th><th>Description</th></tr>`;
+        data.expenses.forEach(row => {
+          total += parseFloat(row.amount);
+          html += `<tr><td>${row.date}</td><td>${row.amount}</td><td>${row.description}</td></tr>`;
+        });
+        html += "</table>";
+        expenseData.innerHTML = html;
+        totalDisplay.textContent = `Total: ₹${total.toFixed(2)}`;
+      } else {
+        expenseData.innerHTML = "<p>No data found for this month.</p>";
+        totalDisplay.textContent = "Total: ₹0";
+      }
+    } catch (err) {
+      console.error("❌ Failed to load expenses:", err);
+    }
+  }
+
+  form.addEventListener("submit", submitExpense);
+  loadBtn.addEventListener("click", loadExpenses);
+  loadMonths();
 });
-
-function renderTable(data, total) {
-  if (!data.length) {
-    expenseDataDiv.innerHTML = "<p>No entries found.</p>";
-    return;
-  }
-
-  totalDisplay.textContent = `Total: ₹${total.toFixed(2)}`;
-
-  let html = "<table><tr><th>Date</th><th>Amount (₹)</th><th>Description</th></tr>";
-  data.forEach(row => {
-    html += `<tr><td>${row.date}</td><td>${row.amount}</td><td>${row.description}</td></tr>`;
-  });
-  html += "</table>";
-
-  expenseDataDiv.innerHTML = html;
-}
-
-loadMonths();
