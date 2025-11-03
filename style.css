@@ -1,0 +1,77 @@
+body {
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f3f4f6;
+  padding: 20px;
+  color: #333;
+}
+
+main {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+h2 {
+  text-align: center;
+}
+
+form, .view-section {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+input, textarea, select, button {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:hover {
+  background-color: #43a047;
+}
+
+.currency {
+  display: flex;
+  align-items: center;
+}
+
+.currency span {
+  margin-right: 8px;
+  font-weight: bold;
+}
+
+.total {
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #e8f5e9;
+}

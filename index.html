@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>💸 Expense Tracker</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <form id="expenseForm">
+      <h2>💸 Add Expense</h2>
+
+      <label>Date</label>
+      <input id="date" name="entry.442057249" type="date" required />
+
+      <label>Amount (₹)</label>
+      <div class="currency">
+        <span>₹</span>
+        <input id="amount" name="entry.1545306348" type="number" min="0" step="0.01" required />
+      </div>
+
+      <label>Description</label>
+      <textarea id="desc" name="entry.445234516" rows="3" required></textarea>
+
+      <button type="submit">Submit</button>
+      <button type="button" id="syncBtn">Sync Now</button>
+    </form>
+
+    <section class="view-section">
+      <h2>📊 View Expenses</h2>
+
+      <label>Select Month</label>
+      <select id="monthSelect"></select>
+
+      <button id="loadDataBtn">Load Data</button>
+
+      <p id="totalDisplay" class="total"></p>
+      <div id="expenseData"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
