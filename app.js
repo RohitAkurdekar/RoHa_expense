@@ -1,11 +1,11 @@
 // === CONFIG ===
-const API_URL = "https://script.google.com/macros/s/AKfycbwjlNYxt2f4ff7Th4b1vHbPhnsMXp63WqXAaUft9i-lKrUoiVLoJSo-b7kRr-xxn7dPvA/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwoAX6tK9-eU3r2ZyL5sxgD5UbsTEs7o9eX1DrGXbRC8ZShCTWa4ipHM37UeiDOkXdy9A/exec";
 const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfe5jqsBh3dUHOZ3qFTkzzR3kOl3wo8WaMQcDo4M_Uw5V2krA/formResponse";
 const ENTRY_ID_DATE = "entry.442057249";
 const ENTRY_ID_AMOUNT = "entry.1545306348";
 const ENTRY_ID_MESSAGE = "entry.445234516";
 
-// === DOM ELEMENTS ===
+// === DOM ===
 const form = document.getElementById("expenseForm");
 const statusText = document.getElementById("formStatus");
 const tableBody = document.querySelector("#expenseTable tbody");
@@ -15,7 +15,6 @@ const monthSelector = document.getElementById("monthSelector");
 // === ADD EXPENSE ===
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-
   const date = document.getElementById("date").value;
   const amount = document.getElementById("amount").value;
   const message = document.getElementById("message").value;
@@ -28,21 +27,14 @@ form.addEventListener("submit", async (e) => {
     formData.append(ENTRY_ID_AMOUNT, amount);
     formData.append(ENTRY_ID_MESSAGE, message);
 
-    await fetch(FORM_URL, {
-      method: "POST",
-      mode: "no-cors",
-      body: formData,
-    });
+    await fetch(FORM_URL, { method: "POST", mode: "no-cors", body: formData });
 
     statusText.textContent = "✅ Expense added!";
     form.reset();
 
-    // Reload data after short delay
-    setTimeout(() => {
-      loadMonths();
-    }, 1000);
+    setTimeout(loadMonths, 1000);
   } catch (error) {
-    console.error(error);
+    console.error("❌ Form submit error:", error);
     statusText.textContent = "❌ Failed to submit expense.";
   }
 });
@@ -55,51 +47,47 @@ async function loadMonths() {
     const data = await res.json();
     console.log("📦 Months API response:", data);
 
-    if (!data.months || !Array.isArray(data.months)) {
-      throw new Error("Invalid months response");
-    }
+    if (!data.months || !Array.isArray(data.months)) throw new Error("Invalid months response");
 
     monthSelector.innerHTML = "";
-
-    data.months.forEach(m => {
+    data.months.forEach((m) => {
       const opt = document.createElement("option");
       opt.value = m;
       opt.textContent = m;
       monthSelector.appendChild(opt);
     });
 
-    console.log(`✅ Loaded ${data.months.length} months`);
-
-    if (data.months.length > 0) {
-      loadExpenses(data.months[data.months.length - 1]); // Load latest month automatically
-    }
+    if (data.months.length > 0) loadExpenses(data.months[0]);
   } catch (err) {
     console.error("❌ Failed to load months:", err);
   }
 }
 
-// === LOAD EXPENSES FOR SELECTED MONTH ===
+// === LOAD EXPENSES ===
 async function loadExpenses(month) {
+  console.log(`📊 Loading expenses for ${month}`);
   tableBody.innerHTML = "<tr><td colspan='3'>Loading...</td></tr>";
   totalDisplay.textContent = "";
 
   try {
-    const res = await fetch(`${API_URL}?action=getData&month=${month}`);
-    const json = await res.json();
+    const res = await fetch(`${API_URL}?action=getData&month=${encodeURIComponent(month)}`);
+    const result = await res.json();
+    console.log("📦 Expense data:", result);
 
-    if (!json.data || !Array.isArray(json.data)) {
+    if (!result.data || !Array.isArray(result.data)) {
       tableBody.innerHTML = "<tr><td colspan='3'>No data found</td></tr>";
+      totalDisplay.textContent = "";
       return;
     }
 
     let total = 0;
-    tableBody.innerHTML = json.data
-      .map((row) => {
-        total += parseFloat(row.amount) || 0;
+    tableBody.innerHTML = result.data
+      .map((r) => {
+        total += parseFloat(r.amount || 0);
         return `<tr>
-          <td>${new Date(row.date).toLocaleDateString()}</td>
-          <td>₹${row.amount}</td>
-          <td>${row.description}</td>
+          <td>${new Date(r.date).toLocaleDateString()}</td>
+          <td>₹${r.amount}</td>
+          <td>${r.description}</td>
         </tr>`;
       })
       .join("");
@@ -111,15 +99,11 @@ async function loadExpenses(month) {
   }
 }
 
-// === EVENT LISTENER ===
-monthSelector.addEventListener("change", (e) => {
-  loadExpenses(e.target.value);
-});
+monthSelector.addEventListener("change", (e) => loadExpenses(e.target.value));
 
-// === INIT ===
-loadMonths();
+window.addEventListener("DOMContentLoaded", loadMonths);
 
-// === SERVICE WORKER (optional offline support) ===
+// === SERVICE WORKER ===
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("service-worker.js")
