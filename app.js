@@ -73,7 +73,9 @@ async function loadExpenses(month) {
   totalDisplay.textContent = "";
 
   try {
-    const res = await fetch(`${API_URL}?action=getData&month=${encodeURIComponent(month)}`);
+    uri_test = `${API_URL}?action=getData&month=${encodeURIComponent(month)}`;
+    console.log("test uri:, uri_test);
+    const res = await fetch(uri_test);
     const result = await res.json();
     console.log("📦 Expense data:", result);
 
@@ -113,3 +115,4 @@ if ("serviceWorker" in navigator) {
     .then(() => console.log("✅ Service Worker registered successfully"))
     .catch(console.error);
 }
+
