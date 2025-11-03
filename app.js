@@ -10,7 +10,6 @@ const form = document.getElementById("expenseForm");
 const statusText = document.getElementById("formStatus");
 const tableBody = document.querySelector("#expenseTable tbody");
 const totalDisplay = document.getElementById("total");
-const monthSelector = document.getElementById("monthSelector");
 
 // === ADD EXPENSE ===
 form.addEventListener("submit", async (e) => {
@@ -43,13 +42,15 @@ form.addEventListener("submit", async (e) => {
 async function loadMonths() {
   console.log("📡 Fetching available months...");
   try {
+    const monthSelector = document.getElementById("monthSelect");
+
     const res = await fetch(`${API_URL}?action=getMonths`);
     const data = await res.json();
     console.log("📦 Months API response:", data);
 
     if (!data.months || !Array.isArray(data.months)) throw new Error("Invalid months response");
 
-    // monthSelector.innerHTML = "";
+    monthSelector.innerHTML = "";
     data.months.forEach((m) => {
       const opt = document.createElement("option");
       opt.value = m;
@@ -70,6 +71,7 @@ async function loadExpenses(month) {
   totalDisplay.textContent = "";
 
   try {
+    const monthSelector = document.getElementById("monthSelect");
     const res = await fetch(`${API_URL}?action=getData&month=${encodeURIComponent(month)}`);
     const result = await res.json();
     console.log("📦 Expense data:", result);
@@ -110,5 +112,6 @@ if ("serviceWorker" in navigator) {
     .then(() => console.log("✅ Service Worker registered successfully"))
     .catch(console.error);
 }
+
 
 
