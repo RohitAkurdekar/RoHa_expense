@@ -1,74 +1,61 @@
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #f7f7f7;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: #f4f4f4;
   color: #333;
-  margin: 0;
-  padding: 1rem;
+  margin: 20px;
+  text-align: center;
 }
 
-main {
-  max-width: 600px;
-  margin: auto;
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+h1 {
+  color: #4CAF50;
 }
 
-form, section {
-  margin-bottom: 2rem;
+form {
+  margin: 15px auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
 }
 
-label {
-  display: block;
-  margin-top: 1rem;
-}
-
-input, textarea, select, button {
-  width: 100%;
-  padding: 0.6rem;
-  margin-top: 0.5rem;
-  border: 1px solid #ccc;
+input, button, select {
+  padding: 10px;
   border-radius: 6px;
+  border: 1px solid #ccc;
   font-size: 1rem;
 }
 
 button {
-  background-color: #0078d4;
-  color: white;
-  font-weight: 600;
+  background: #4CAF50;
+  color: #fff;
   border: none;
   cursor: pointer;
-  margin-top: 1rem;
 }
 
 button:hover {
-  background-color: #005fa3;
+  background: #45a049;
 }
 
-#summary {
-  text-align: center;
-  margin: 1rem 0;
+#formStatus {
+  margin-top: 10px;
 }
 
 table {
-  width: 100%;
+  width: 90%;
+  margin: 20px auto;
   border-collapse: collapse;
 }
 
 th, td {
-  border-bottom: 1px solid #ddd;
-  padding: 0.6rem;
-  text-align: left;
+  border: 1px solid #ddd;
+  padding: 8px;
 }
 
 th {
-  background-color: #0078d4;
+  background: #4CAF50;
   color: white;
 }
 
-.total {
-  font-weight: bold;
-  margin-top: 1rem;
-  text-align: center;
+tr:nth-child(even) {
+  background: #f9f9f9;
 }
