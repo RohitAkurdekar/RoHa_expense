@@ -66,6 +66,34 @@ function onFormSubmit(e) {
 
   monthSheet.appendRow([date, amount, desc]);
   console.log(`✅ Added row to ${monthName}:`, { date, amount, desc });
+
+  // Sort all sheets after update
+  sortAllSheetsByDate();
+}
+
+/**
+ * Sorts all sheets (main + month-wise) by Date column (ascending)
+ */
+function sortAllSheetsByDate() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheets = ss.getSheets();
+
+  sheets.forEach(sheet => {
+    const name = sheet.getName();
+    const data = sheet.getDataRange().getValues();
+    if (data.length <= 1) return; // skip empty sheets
+
+    // Find the "Date" column (case-insensitive)
+    const headers = data[0].map(h => h.toString().trim().toLowerCase());
+    const dateIndex = headers.indexOf("date");
+    if (dateIndex === -1) return; // no "Date" column, skip
+
+    // Sort the sheet (skip the header row)
+    const range = sheet.getRange(2, 1, data.length - 1, data[0].length);
+    range.sort({ column: dateIndex + 1, ascending: true });
+
+    console.log(`🔃 Sorted sheet: ${name} by column ${dateIndex + 1}`);
+  });
 }
 
 /**
