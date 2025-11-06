@@ -86,16 +86,21 @@ async function loadExpenses(month) {
     }
 
     let total = 0;
-    tableBody.innerHTML = result.data
-      .map((r) => {
-        total += parseFloat(r.amount || 0);
-        return `<tr>
-          <td>${new Date(r.date).toLocaleDateString()}</td>
-          <td>₹${r.amount}</td>
-          <td>${r.description}</td>
-        </tr>`;
-      })
-      .join("");
+    tableBody.innerHTML = result.data.map((r) => {
+      total += parseFloat(r.amount || 0);
+  
+      const date = new Date(r.date);
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = date.toLocaleString("en-GB", { month: "short" }); // e.g. Jan, Feb, Mar
+      const year = date.getFullYear();
+      const formattedDate = `${day}/${month}/${year}`;
+  
+      return `<tr>
+        <td>${formattedDate}</td>
+        <td>₹${r.amount}</td>
+        <td>${r.description}</td>
+      </tr>`;
+    }).join("");
 
     totalDisplay.textContent = `💵 Total: ₹${total.toFixed(2)}`;
   } catch (err) {
@@ -115,6 +120,7 @@ if ("serviceWorker" in navigator) {
     .then(() => console.log("✅ Service Worker registered successfully"))
     .catch(console.error);
 }
+
 
 
 
