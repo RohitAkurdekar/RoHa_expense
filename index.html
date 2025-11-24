@@ -15,6 +15,13 @@
     <form id="expenseForm">
       <input type="date" id="date" required />
       <input type="text" id="message" placeholder="Description" required />
+      
+      <select id="category" required>
+        <option value="" disabled selected>Select Category</option>
+        <option value="home">Home</option>
+        <option value="food">Food</option>
+      </select>
+
       <input type="number" id="amount" placeholder="Amount (₹)" required />
       <button type="submit">➕ Add Expense</button>
     </form>
@@ -42,4 +49,5 @@
   <script src="app.js"></script>
 </body>
 </html>
+
 
