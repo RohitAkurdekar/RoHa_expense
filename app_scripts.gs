@@ -23,11 +23,13 @@ function doGet(e) {
     const headers = rows.shift().map(h => h.toString().trim().toLowerCase());
     const dateIndex = headers.indexOf("date");
     const amountIndex = headers.indexOf("amount");
+    const categoryIndex = headers.indexOf("category");
     const descIndex = headers.indexOf("description");
 
     const data = rows.map(r => ({
       date: dateIndex >= 0 ? r[dateIndex] : "",
       amount: amountIndex >= 0 ? r[amountIndex] : "",
+      category: categoryIndex >= 0 ? r[categoryIndex] : "",
       description: descIndex >= 0 ? r[descIndex] : ""
     }));
 
@@ -57,15 +59,16 @@ function onFormSubmit(e) {
   if (!monthSheet) {
     console.log(`🆕 Creating new sheet: ${monthName}`);
     monthSheet = ss.insertSheet(monthName);
-    monthSheet.appendRow(["Date", "Amount", "Description"]);
+    monthSheet.appendRow(["Date", "Amount", "Category", "Description"]);
   }
 
   const date = data[1];
   const amount = data[2];
-  const desc = data[3];
+  const category = data[3];
+  const desc = data[4];
 
-  monthSheet.appendRow([date, amount, desc]);
-  console.log(`✅ Added row to ${monthName}:`, { date, amount, desc });
+  monthSheet.appendRow([date, amount, category, desc]);
+  console.log(`✅ Added row to ${monthName}:`, { date, amount, category, desc });
 
   // Sort all sheets after update
   sortAllSheetsByDate();
