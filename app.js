@@ -19,6 +19,7 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const date = document.getElementById("date").value;
   const amount = document.getElementById("amount").value;
+  const category = document.getElementById("category").value;
   const message = document.getElementById("message").value;
 
   statusText.textContent = "⏳ Submitting...";
@@ -27,6 +28,7 @@ form.addEventListener("submit", async (e) => {
     const formData = new FormData();
     formData.append(ENTRY_ID_DATE, date);
     formData.append(ENTRY_ID_AMOUNT, amount);
+    formData.append(ENTRY_ID_CATEGORY, category);
     formData.append(ENTRY_ID_MESSAGE, message);
 
     await fetch(FORM_URL, { method: "POST", mode: "no-cors", body: formData });
@@ -122,6 +124,7 @@ if ("serviceWorker" in navigator) {
     .then(() => console.log("✅ Service Worker registered successfully"))
     .catch(console.error);
 }
+
 
 
 
