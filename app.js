@@ -3,6 +3,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxNZw7hSsz5eZxQ0ksUsIJw
 const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfe5jqsBh3dUHOZ3qFTkzzR3kOl3wo8WaMQcDo4M_Uw5V2krA/formResponse";
 const ENTRY_ID_DATE = "entry.442057249";
 const ENTRY_ID_AMOUNT = "entry.1545306348";
+const ENTRY_ID_CATEGORY = "entry.2090635580";
 const ENTRY_ID_MESSAGE = "entry.445234516";
 
 // === DOM ===
@@ -120,6 +121,7 @@ if ("serviceWorker" in navigator) {
     .then(() => console.log("✅ Service Worker registered successfully"))
     .catch(console.error);
 }
+
 
 
 
