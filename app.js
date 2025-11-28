@@ -28,9 +28,9 @@ form.addEventListener("submit", async (e) => {
     const formData = new FormData();
     formData.append(ENTRY_ID_DATE, date);
     formData.append(ENTRY_ID_AMOUNT, amount);
-    formData.append(ENTRY_ID_CATEGORY, category);
     formData.append(ENTRY_ID_MESSAGE, message);
-
+    formData.append(ENTRY_ID_CATEGORY, category);
+    console.log("form: ", formData);
     await fetch(FORM_URL, { method: "POST", mode: "no-cors", body: formData });
 
     statusText.textContent = "✅ Expense added!";
@@ -102,6 +102,7 @@ async function loadExpenses(month) {
       return `<tr>
         <td>${formattedDate}</td>
         <td>₹${r.amount}</td>
+        <td>${r.category}</td>
         <td>${r.description}</td>
       </tr>`;
     }).join("");
@@ -124,16 +125,4 @@ if ("serviceWorker" in navigator) {
     .then(() => console.log("✅ Service Worker registered successfully"))
     .catch(console.error);
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
