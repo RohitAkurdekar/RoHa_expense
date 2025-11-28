@@ -1,6 +1,6 @@
 // === CONFIG ===
 
-const API_URL = "https://script.google.com/macros/s/AKfycbyvtaFKV9zShIL4_3MJMIIEP_0FDO_COnHSMTNCBFb9CxqF6BtMaDfC9U3c3hfsgLDW6A/exec";
+const API_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfe5jqsBh3dUHOZ3qFTkzzR3kOl3wo8WaMQcDo4M_Uw5V2krA/exec";
 const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfe5jqsBh3dUHOZ3qFTkzzR3kOl3wo8WaMQcDo4M_Uw5V2krA/formResponse";
 const ENTRY_ID_DATE = "entry.442057249";
 const ENTRY_ID_AMOUNT = "entry.1545306348";
@@ -125,4 +125,5 @@ if ("serviceWorker" in navigator) {
     .then(() => console.log("✅ Service Worker registered successfully"))
     .catch(console.error);
 }
+
 
